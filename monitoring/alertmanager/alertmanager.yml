@@ -1,0 +1,55 @@
+global:
+  smtp_smarthost: 'smtp.gmail.com:587'
+  smtp_from: 'alerts@ai-factory.com'
+  smtp_auth_username: 'alerts@ai-factory.com'
+  smtp_auth_password: '${SMTP_PASSWORD}'
+
+route:
+  group_by: ['alertname', 'service']
+  group_wait: 10s
+  group_interval: 10s
+  repeat_interval: 1h
+  receiver: 'email-alerts'
+
+receivers:
+  - name: 'email-alerts'
+    email_configs:
+      - to: 'fufansong@gmail.com'
+        send_resolved: true
+        headers:
+          Subject: '[{{ .Status | toUpper }}] {{ .GroupLabels.alertname }}'
+        html: |
+          <h2>{{ .GroupLabels.alertname }}</h2>
+          <p><strong>Status:</strong> {{ .Status }}</p>
+          <p><strong>Service:</strong> {{ .GroupLabels.service }}</p>
+          <p><strong>Summary:</strong> {{ .Annotations.summary }}</p>
+          <p><strong>Description:</strong> {{ .Annotations.description }}</p>
+          <p><strong>Firing alerts:</strong></p>
+          <ul>
+          {{ range .Alerts }}
+            <li>
+              <strong>Alert:</strong> {{ .Labels.alertname }}<br/>
+              <strong>Severity:</strong> {{ .Labels.severity }}<br/>
+              <strong>Time:</strong> {{ .StartsAt.Format "2006-01-02 15:04:05" }}<br/>
+              <strong>Description:</strong> {{ .Annotations.description }}
+            </li>
+          {{ end }}
+          </ul>
+  
+  - name: 'slack-alerts'
+    slack_configs:
+      - api_url: '${SLACK_WEBHOOK_URL}'
+        channel: '#alerts'
+        title: '[{{ .Status | toUpper }}] {{ .GroupLabels.alertname }}'
+        text: |
+          *Alert:* {{ .GroupLabels.alertname }}
+          *Status:* {{ .Status }}
+          *Service:* {{ .GroupLabels.service }}
+          *Summary:* {{ .Annotations.summary }}
+          *Description:* {{ .Annotations.description }}
+          
+          *Firing alerts:*
+          {{ range .Alerts }}
+          • {{ .Labels.alertname }} ({{ .Labels.severity }}): {{ .Annotations.description }}
+          {{ end }}
+        send_resolved: true

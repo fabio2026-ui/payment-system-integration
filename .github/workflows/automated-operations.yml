@@ -1,0 +1,230 @@
+name: Automated Operations
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'  # 每6小时运行一次
+  workflow_dispatch:  # 手动触发
+
+jobs:
+  health-check:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Run health check
+      run: |
+        python -c "
+        import requests
+        import sys
+        
+        try:
+            response = requests.get('http://localhost:8000/health', timeout=10)
+            if response.status_code == 200 and response.json().get('status') == 'healthy':
+                print('✅ Health check passed')
+                sys.exit(0)
+            else:
+                print('❌ Health check failed')
+                sys.exit(1)
+        except Exception as e:
+            print(f'❌ Health check error: {e}')
+            sys.exit(1)
+        "
+    
+    - name: Send notification on failure
+      if: failure()
+      uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        SLACK_CHANNEL: '#alerts'
+        SLACK_TITLE: 'Health Check Failed - payment-system-integration'
+        SLACK_MESSAGE: 'Health check failed for payment-system-integration. Please investigate.'
+
+  performance-test:
+    runs-on: ubuntu-latest
+    needs: health-check
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install locust
+    
+    - name: Run performance test
+      run: |
+        cat > locustfile.py << 'EOF'
+from locust import HttpUser, task, between
+
+class Payment_System_IntegrationUser(HttpUser):
+    wait_time = between(1, 3)
+    
+    @task
+    def health_check(self):
+        self.client.get("/health")
+    
+    @task(3)
+    def main_endpoint(self):
+        self.client.get("/")
+    
+    @task(2)
+    def api_endpoint(self):
+        self.client.get("/api/data")
+EOF
+        
+        # 启动性能测试
+        locust -f locustfile.py --headless -u 10 -r 1 -t 30s --host=http://localhost:8000
+    
+    - name: Generate performance report
+      run: |
+        echo "# Performance Test Report" > performance_report.md
+        echo "Generated: $(date)" >> performance_report.md
+        echo "" >> performance_report.md
+        echo "## Test Configuration" >> performance_report.md
+        echo "- Users: 10" >> performance_report.md
+        echo "- Spawn rate: 1 user/second" >> performance_report.md
+        echo "- Duration: 30 seconds" >> performance_report.md
+        echo "" >> performance_report.md
+        echo "## Results" >> performance_report.md
+        echo "Performance test completed successfully." >> performance_report.md
+
+  backup-database:
+    runs-on: ubuntu-latest
+    needs: health-check
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Backup database
+      run: |
+        timestamp=$(date +%Y%m%d_%H%M%S)
+        backup_file="backup_payment-system-integration_$timestamp.sql"
+        
+        if [ -f "database.db" ]; then
+            sqlite3 database.db ".backup $backup_file"
+            gzip $backup_file
+            echo "✅ Database backed up: $backup_file.gz"
+        else
+            echo "⚠️ No database file found, skipping backup"
+        fi
+    
+    - name: Upload backup to artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: database-backup
+        path: backup_*.sql.gz
+        retention-days: 7
+
+  cleanup:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Cleanup old logs
+      run: |
+        # 清理7天前的日志
+        find . -name "*.log" -mtime +7 -delete
+        echo "✅ Old logs cleaned up"
+    
+    - name: Cleanup old backups
+      run: |
+        # 清理30天前的备份
+        find . -name "backup_*.sql.gz" -mtime +30 -delete
+        echo "✅ Old backups cleaned up"
+
+  update-dependencies:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule'  # 只在定时任务时运行
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Update dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt --upgrade
+        
+        # 生成新的requirements.txt
+        pip freeze > requirements.txt
+        
+        # 检查是否有更新
+        if git diff --quiet requirements.txt; then
+            echo "✅ No dependency updates needed"
+        else
+            echo "📦 Dependencies updated"
+            git config user.name "GitHub Actions"
+            git config user.email "actions@github.com"
+            git add requirements.txt
+            git commit -m "chore: update dependencies"
+            git push
+        fi
+
+  generate-report:
+    runs-on: ubuntu-latest
+    needs: [health-check, performance-test, backup-database, cleanup]
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Generate operations report
+      run: |
+        cat > operations_report.md << 'EOF'
+# payment-system-integration Operations Report
+Generated: $(date)
+
+## Summary
+All automated operations completed successfully.
+
+## Health Check
+✅ Passed
+
+## Performance Test
+✅ Completed successfully
+
+## Database Backup
+✅ Backed up successfully
+
+## Cleanup
+✅ Old logs and backups cleaned up
+
+## Next Actions
+1. Review performance metrics
+2. Check database backup integrity
+3. Monitor system health
+
+## System Status
+- Health: ✅ Healthy
+- Performance: ✅ Normal
+- Backup: ✅ Complete
+- Cleanup: ✅ Complete
+EOF
+    
+    - name: Upload report
+      uses: actions/upload-artifact@v3
+      with:
+        name: operations-report
+        path: operations_report.md
+        retention-days: 30

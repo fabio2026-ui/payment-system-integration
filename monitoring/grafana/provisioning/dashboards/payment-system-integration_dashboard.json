@@ -1,0 +1,109 @@
+{
+  "title": "payment-system-integration Monitoring Dashboard",
+  "tags": [
+    "monitoring",
+    "ai-factory",
+    "payment-system-integration"
+  ],
+  "timezone": "browser",
+  "panels": [
+    {
+      "title": "Service Health",
+      "type": "stat",
+      "targets": [
+        {
+          "expr": "up{job=\"payment-system-integration\"}",
+          "legendFormat": "Status"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "type": "value",
+              "options": {
+                "1": {
+                  "color": "green",
+                  "text": "Healthy"
+                },
+                "0": {
+                  "color": "red",
+                  "text": "Down"
+                }
+              }
+            }
+          ],
+          "thresholds": {
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 1
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "title": "Request Rate",
+      "type": "graph",
+      "targets": [
+        {
+          "expr": "rate(http_requests_total{job=\"payment-system-integration\"}[5m])",
+          "legendFormat": "Requests/s"
+        }
+      ]
+    },
+    {
+      "title": "Error Rate",
+      "type": "graph",
+      "targets": [
+        {
+          "expr": "rate(http_requests_total{job=\"payment-system-integration\", status=~\"5..\"}[5m])",
+          "legendFormat": "5xx Errors/s"
+        },
+        {
+          "expr": "rate(http_requests_total{job=\"payment-system-integration\", status=~\"4..\"}[5m])",
+          "legendFormat": "4xx Errors/s"
+        }
+      ]
+    },
+    {
+      "title": "Response Time (95th percentile)",
+      "type": "graph",
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, rate(http_request_duration_seconds_bucket{job=\"payment-system-integration\"}[5m]))",
+          "legendFormat": "95th percentile"
+        }
+      ]
+    },
+    {
+      "title": "CPU Usage",
+      "type": "graph",
+      "targets": [
+        {
+          "expr": "rate(process_cpu_seconds_total{job=\"payment-system-integration\"}[5m]) * 100",
+          "legendFormat": "CPU %"
+        }
+      ]
+    },
+    {
+      "title": "Memory Usage",
+      "type": "graph",
+      "targets": [
+        {
+          "expr": "process_resident_memory_bytes{job=\"payment-system-integration\"} / (1024 * 1024)",
+          "legendFormat": "Memory MB"
+        }
+      ]
+    }
+  ]
+}

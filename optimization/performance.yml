@@ -1,0 +1,79 @@
+# payment-system-integration 性能优化配置
+
+## 数据库优化
+database:
+  connection_pool:
+    max_connections: 20
+    min_connections: 5
+    max_lifetime: 3600  # 1小时
+    idle_timeout: 600   # 10分钟
+  
+  query_optimization:
+    enable_query_cache: true
+    cache_ttl: 300      # 5分钟
+    slow_query_threshold: 1000  # 1秒
+  
+  indexing:
+    auto_create_indexes: true
+    index_rebuild_interval: 86400  # 每天
+
+## 缓存配置
+cache:
+  redis:
+    enabled: true
+    host: localhost
+    port: 6379
+    ttl: 3600  # 1小时
+    max_memory: 100mb
+  
+  memory:
+    enabled: true
+    max_size: 100mb
+    ttl: 300   # 5分钟
+
+## API优化
+api:
+  rate_limiting:
+    enabled: true
+    requests_per_minute: 60
+    burst_limit: 10
+  
+  compression:
+    enabled: true
+    level: 6  # 平衡压缩率和速度
+  
+  pagination:
+    default_page_size: 20
+    max_page_size: 100
+  
+  caching:
+    enabled: true
+    default_ttl: 300  # 5分钟
+
+## 监控和警报
+monitoring:
+  metrics:
+    enabled: true
+    port: 9091
+    
+  health_checks:
+    enabled: true
+    interval: 30  # 30秒
+    
+  logging:
+    level: INFO
+    format: json
+    retention_days: 30
+
+## 自动扩展
+autoscaling:
+  enabled: true
+  min_instances: 1
+  max_instances: 10
+  metrics:
+    - name: cpu_utilization
+      threshold: 70
+    - name: memory_utilization
+      threshold: 80
+    - name: request_rate
+      threshold: 1000  # 请求/秒

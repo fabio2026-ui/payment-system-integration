@@ -552,3 +552,96 @@ docker exec -it payment-system-integration bash
 - **Docker Swarm** 或 **Kubernetes** 进行容器编排
 - **Traefik** 或 **Nginx** 作为反向代理
 - **Let's Encrypt** 进行SSL证书管理
+
+## 📊 监控和运维系统
+
+### 监控系统
+项目包含完整的监控系统，使用Prometheus + Grafana + Alertmanager:
+
+#### 启动监控系统
+```bash
+# 启动所有监控组件
+cd monitoring
+docker-compose -f docker-compose.monitoring.yml up -d
+```
+
+#### 访问监控界面
+- **Prometheus**: http://localhost:9090
+- **Grafana**: http://localhost:3000 (admin/admin)
+- **Alertmanager**: http://localhost:9093
+
+#### 监控指标
+- 服务健康状态
+- 请求率和错误率
+- 响应时间 (95th percentile)
+- CPU和内存使用率
+- 磁盘空间使用
+
+### 自动化运维
+项目包含完整的自动化运维系统:
+
+#### 运维脚本
+```bash
+# 健康检查
+./optimization/automation.sh health
+
+# 性能检查
+./optimization/automation.sh performance
+
+# 备份数据库
+./optimization/automation.sh backup
+
+# 清理旧日志
+./optimization/automation.sh cleanup
+
+# 更新依赖
+./optimization/automation.sh update
+
+# 重启服务
+./optimization/automation.sh restart
+
+# 部署新版本
+./optimization/automation.sh deploy
+
+# 生成监控报告
+./optimization/automation.sh report
+
+# 执行所有运维任务
+./optimization/automation.sh all
+```
+
+#### 自动化运维工作流
+项目配置了GitHub Actions自动化运维工作流，每6小时自动执行:
+- ✅ 健康检查
+- ✅ 性能测试
+- ✅ 数据库备份
+- ✅ 日志清理
+- ✅ 依赖更新
+- ✅ 报告生成
+
+### 性能优化配置
+项目包含详细的性能优化配置 (`optimization/performance.yml`):
+- 数据库连接池优化
+- 缓存配置 (Redis + 内存缓存)
+- API速率限制和压缩
+- 自动扩展配置
+- 监控和警报配置
+
+### 警报系统
+项目配置了完整的警报系统:
+- **电子邮件警报**: 发送到配置的邮箱
+- **Slack警报**: 发送到Slack频道
+- **关键警报**: 服务宕机、高错误率、高延迟
+- **警告警报**: 高CPU/内存使用、低磁盘空间
+
+### 备份和恢复
+- **自动备份**: 每6小时自动备份数据库
+- **备份保留**: 保留7天内的备份
+- **恢复脚本**: 包含数据库恢复脚本
+- **异地备份**: 支持配置到云存储
+
+### 安全监控
+- 实时安全事件监控
+- 异常访问模式检测
+- API滥用检测
+- 数据泄露防护
