@@ -39,6 +39,144 @@
 
 ## 🐳 Docker 部署
 ## 🧪 测试
+## 📊 监控和告警
+
+### 监控架构
+
+项目使用完整的监控栈:
+- **Prometheus**: 指标收集和存储
+- **Grafana**: 数据可视化和仪表板
+- **Node Exporter**: 系统指标收集
+- **cAdvisor**: 容器指标收集
+- **Alertmanager**: 告警管理
+
+### 快速开始
+
+```bash
+# 启动所有服务（包括监控）
+docker-compose up -d
+
+# 访问监控界面
+# Prometheus: http://localhost:9090
+# Grafana: http://localhost:3000 (admin/admin)
+# cAdvisor: http://localhost:8080
+```
+
+### 关键指标
+
+#### 服务健康
+- **服务状态**: `up{job="payment-system-integration"}`
+- **请求率**: `rate(http_requests_total[5m])`
+- **错误率**: `rate(http_requests_total{status=~"5.."}[5m]) / rate(http_requests_total[5m])`
+- **响应时间**: `histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m]))`
+
+#### 资源使用
+- **内存使用**: `container_memory_usage_bytes{container_label_com_docker_compose_service="payment-system-integration"}`
+- **CPU使用**: `rate(container_cpu_usage_seconds_total{container_label_com_docker_compose_service="payment-system-integration"}[5m])`
+- **磁盘空间**: `node_filesystem_avail_bytes{mountpoint="/"}`
+
+### 告警规则
+
+#### 关键告警
+1. **服务宕机**: 服务停止超过1分钟
+2. **高错误率**: 错误率超过5%持续2分钟
+3. **高延迟**: 95th percentile延迟超过1秒
+4. **高内存使用**: 内存使用超过80%限制
+5. **高CPU使用**: CPU使用超过80%
+
+#### 告警通知
+告警通过以下渠道发送:
+- **电子邮件**: 配置在Alertmanager中
+- **Slack**: 集成Slack webhook
+- **PagerDuty**: 集成PagerDuty
+- **Webhook**: 自定义webhook端点
+
+### Grafana仪表板
+
+预配置的仪表板包含:
+1. **服务概览**: 关键指标概览
+2. **性能分析**: 详细的性能指标
+3. **资源监控**: CPU、内存、磁盘使用
+4. **业务指标**: 业务相关指标
+
+### 性能优化
+
+#### Nginx配置
+- **Gzip压缩**: 减少传输大小
+- **缓存控制**: 静态资源缓存
+- **连接池**: 保持活动连接
+- **超时设置**: 合理的超时配置
+
+#### 数据库优化
+- **连接池**: 最小5个，最大20个连接
+- **查询超时**: 30秒查询超时
+- **索引优化**: 自动索引建议
+
+#### 缓存策略
+- **Redis缓存**: 分布式缓存
+- **默认TTL**: 5分钟缓存时间
+- **缓存失效**: 智能缓存失效策略
+
+### 性能测试
+
+运行性能测试:
+```bash
+# 安装性能测试工具
+pip install locust
+
+# 运行性能测试
+cd performance
+python performance_test.py
+
+# 使用Locust进行负载测试
+locust -f performance/locustfile.py
+```
+
+### 监控最佳实践
+
+1. **指标命名**: 使用一致的命名约定
+2. **标签使用**: 使用有意义的标签
+3. **告警阈值**: 设置合理的告警阈值
+4. **仪表板设计**: 设计清晰的仪表板
+5. **文档化**: 记录监控配置和告警规则
+
+### 故障排除
+
+#### 常见问题
+1. **指标缺失**: 检查服务是否暴露/metrics端点
+2. **告警不触发**: 检查Prometheus规则配置
+3. **仪表板不显示数据**: 检查数据源配置
+4. **高延迟**: 检查数据库查询和网络延迟
+
+#### 调试命令
+```bash
+# 检查Prometheus目标
+curl http://localhost:9090/api/v1/targets
+
+# 检查告警规则
+curl http://localhost:9090/api/v1/rules
+
+# 检查Grafana数据源
+curl -u admin:admin http://localhost:3000/api/datasources
+```
+
+### 扩展监控
+
+#### 业务指标
+- **收入指标**: 实时收入跟踪
+- **用户指标**: 活跃用户、留存率
+- **性能指标**: 关键业务路径性能
+
+#### 安全监控
+- **安全事件**: 登录失败、可疑活动
+- **合规监控**: 数据保护合规性
+- **漏洞扫描**: 定期安全扫描
+
+#### 成本监控
+- **云成本**: AWS/Azure/GCP成本
+- **资源成本**: 计算、存储、网络成本
+- **优化建议**: 成本优化建议
+
 
 ### 运行测试
 
