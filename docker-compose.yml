@@ -10,93 +10,46 @@ services:
     environment:
       - PYTHONUNBUFFERED=1
       - DEBUG=false
+    
+  # 备份服务
+  backup:
+    image: alpine:latest
+    container_name: payment-system-integration-backup
     volumes:
+      - ./backup:/backup
+      - payment-system-integration_data:/app/data:ro
+    command: >
+      sh -c "
+        echo 'Starting backup...' &&
+        cd /backup &&
+        python backup.py &&
+        echo 'Backup completed'
+      "
+    networks:
+      - payment-system-integration-network
+    restart: "no"  # 手动触发或通过cron触发
+
+  # 安全扫描服务
+  security-scan:
+    image: aquasec/trivy:latest
+    container_name: payment-system-integration-security-scan
+    volumes:
+      - ./security:/security
+    command: >
+      sh -c "
+        echo 'Starting security scan...' &&
+        trivy image payment-system-integration:latest &&
+        echo 'Security scan completed'
+      "
+    networks:
+      - payment-system-integration-network
+    restart: "no"  # 手动触发或通过cron触发
+
+volumes:
       - ./data:/app/data
     
   # 监控服务
   prometheus:
     image: prom/prometheus:latest
     container_name: prometheus
-    volumes:
-      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-      - ./monitoring/prometheus/alerts.yml:/etc/prometheus/alerts.yml
-      - prometheus_data:/prometheus
-    command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--storage.tsdb.path=/prometheus'
-      - '--web.console.libraries=/etc/prometheus/console_libraries'
-      - '--web.console.templates=/etc/prometheus/consoles'
-      - '--storage.tsdb.retention.time=200h'
-      - '--web.enable-lifecycle'
-    ports:
-      - "9090:9090"
-    networks:
-      - payment-system-integration-network
-    restart: unless-stopped
-
-  grafana:
-    image: grafana/grafana:latest
-    container_name: grafana
-    volumes:
-      - ./monitoring/grafana:/var/lib/grafana/dashboards
-      - grafana_data:/var/lib/grafana
-    environment:
-      - GF_SECURITY_ADMIN_PASSWORD=admin
-      - GF_USERS_ALLOW_SIGN_UP=false
-    ports:
-      - "3000:3000"
-    networks:
-      - payment-system-integration-network
-    restart: unless-stopped
-
-  node-exporter:
-    image: prom/node-exporter:latest
-    container_name: node-exporter
-    volumes:
-      - /proc:/host/proc:ro
-      - /sys:/host/sys:ro
-      - /:/rootfs:ro
-    command:
-      - '--path.procfs=/host/proc'
-      - '--path.rootfs=/rootfs'
-      - '--path.sysfs=/host/sys'
-      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
-    ports:
-      - "9100:9100"
-    networks:
-      - payment-system-integration-network
-    restart: unless-stopped
-
-  cadvisor:
-    image: gcr.io/cadvisor/cadvisor:latest
-    container_name: cadvisor
-    volumes:
-      - /:/rootfs:ro
-      - /var/run:/var/run:ro
-      - /sys:/sys:ro
-      - /var/lib/docker/:/var/lib/docker:ro
-      - /dev/disk/:/dev/disk:ro
-    ports:
-      - "8080:8080"
-    networks:
-      - payment-system-integration-network
-    restart: unless-stopped
-
-  alertmanager:
-    image: prom/alertmanager:latest
-    container_name: alertmanager
-    volumes:
-      - ./monitoring/alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml
-    ports:
-      - "9093:9093"
-    networks:
-      - payment-system-integration-network
-    restart: unless-stopped
-
-volumes:
-  prometheus_data:
-  grafana_data:
-
-networks:
-      - payment-system-integration-network
-
+    
