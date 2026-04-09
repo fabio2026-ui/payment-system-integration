@@ -1,0 +1,173 @@
+openapi: 3.0.3
+info:
+  title: Payment System Integration API
+  description: Unified payment gateway integration API
+  version: 1.0.0
+  contact:
+    name: Fabio
+    email: fufansong@gmail.com
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: https://api.payment-system.com/v1
+    description: Production server
+  - url: http://localhost:8000/v1
+    description: Development server
+
+paths:
+  /payments/create:
+    post:
+      summary: Create payment
+      description: Create a new payment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [amount, currency, payment_method]
+              properties:
+                amount:
+                  type: number
+                  format: float
+                  minimum: 0.01
+                currency:
+                  type: string
+                  enum: [USD, EUR, GBP, JPY, CNY]
+                payment_method:
+                  type: string
+                  enum: [stripe, paypal, crypto, bank_transfer]
+                customer_email:
+                  type: string
+                  format: email
+                description:
+                  type: string
+                metadata:
+                  type: object
+      responses:
+        '200':
+          description: Payment created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  payment_id:
+                    type: string
+                  status:
+                    type: string
+                    enum: [pending, processing, completed, failed]
+                  payment_url:
+                    type: string
+                    format: uri
+                  expires_at:
+                    type: string
+                    format: date-time
+  
+  /payments/{payment_id}:
+    get:
+      summary: Get payment status
+      description: Retrieve payment status by ID
+      parameters:
+        - name: payment_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Payment status retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  payment_id:
+                    type: string
+                  status:
+                    type: string
+                  amount:
+                    type: number
+                    format: float
+                  currency:
+                    type: string
+                  created_at:
+                    type: string
+                    format: date-time
+                  updated_at:
+                    type: string
+                    format: date-time
+  
+  /payments/webhook:
+    post:
+      summary: Payment webhook
+      description: Handle payment webhook events
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Webhook processed successfully
+  
+  /gateways:
+    get:
+      summary: List available gateways
+      description: Get list of available payment gateways
+      responses:
+        '200':
+          description: Gateways list retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  gateways:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        name:
+                          type: string
+                        enabled:
+                          type: boolean
+                        currencies:
+                          type: array
+                          items:
+                            type: string
+  
+  /currencies:
+    get:
+      summary: Get currency rates
+      description: Get current currency exchange rates
+      responses:
+        '200':
+          description: Currency rates retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  base:
+                    type: string
+                  rates:
+                    type: object
+                  timestamp:
+                    type: string
+                    format: date-time
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+
+security:
+  - ApiKeyAuth: []
