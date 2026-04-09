@@ -645,3 +645,26 @@ docker-compose -f docker-compose.monitoring.yml up -d
 - 异常访问模式检测
 - API滥用检测
 - 数据泄露防护
+
+## 🚀 部署指南
+
+### 快速部署
+```bash
+cd deployment
+./deploy.sh
+```
+
+### 安全扫描
+```bash
+cd security
+./security_scan.sh
+```
+
+### CI/CD流水线
+- 测试流水线: https://github.com/fabio2026-ui/payment-system-integration/actions/workflows/ci-cd-pipeline.yml
+- 安全流水线: https://github.com/fabio2026-ui/payment-system-integration/actions/workflows/security-pipeline.yml
+
+### 生产环境
+- 服务地址: http://localhost:8000
+- 健康检查: http://localhost:8000/health
+- API文档: http://localhost:8000/docs

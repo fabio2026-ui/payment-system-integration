@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  payment-system-integration:
+    build:
+      context: .
+      dockerfile: Dockerfile.production
+    image: payment-system-integration:latest
+    container_name: payment-system-integration
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - APP_ENV=production
+      - LOG_LEVEL=INFO
+    volumes:
+      - ./logs:/app/logs
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  app-network:
+    driver: bridge
