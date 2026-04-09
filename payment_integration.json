@@ -1,0 +1,47 @@
+{
+  "gateways": {
+    "stripe": {
+      "enabled": true,
+      "currencies": [
+        "USD",
+        "EUR",
+        "GBP"
+      ],
+      "auto_invoicing": true,
+      "recurring_billing": true
+    },
+    "paypal": {
+      "enabled": true,
+      "currencies": [
+        "USD",
+        "EUR",
+        "AUD",
+        "CAD"
+      ],
+      "invoice_templates": [
+        "standard",
+        "premium"
+      ]
+    },
+    "wise": {
+      "enabled": true,
+      "low_fees": true,
+      "multi_currency": true
+    }
+  },
+  "automation": {
+    "auto_generate_invoices": true,
+    "payment_reminders": [
+      3,
+      7,
+      14
+    ],
+    "late_fee_calculation": true,
+    "auto_thank_you_emails": true
+  },
+  "security": {
+    "escrow_enabled": true,
+    "milestone_payments": true,
+    "dispute_resolution": "automated_mediation"
+  }
+}

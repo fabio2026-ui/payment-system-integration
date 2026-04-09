@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔥 AI Code Assistant - 限时优惠</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.4);
+            overflow: hidden;
+            max-width: 600px;
+            width: 100%;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 30px 80px rgba(0,0,0,0.4); }
+            50% { box-shadow: 0 30px 80px rgba(255, 107, 107, 0.6); }
+            100% { box-shadow: 0 30px 80px rgba(0,0,0,0.4); }
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        
+        .header .badge {
+            background: #ffd700;
+            color: #333;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 15px;
+            animation: bounce 1s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        
+        .countdown {
+            background: rgba(0,0,0,0.2);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .product {
+            background: #fff;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 3px solid #ff6b6b;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .product:before {
+            content: "🔥 最受欢迎";
+            position: absolute;
+            top: 10px;
+            right: -30px;
+            background: #ff6b6b;
+            color: white;
+            padding: 5px 40px;
+            transform: rotate(45deg);
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .product h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 24px;
+        }
+        
+        .price-container {
+            display: flex;
+            align-items: baseline;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .original-price {
+            font-size: 24px;
+            color: #999;
+            text-decoration: line-through;
+        }
+        
+        .current-price {
+            font-size: 48px;
+            font-weight: bold;
+            color: #ff6b6b;
+        }
+        
+        .discount {
+            background: #28a745;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        .description {
+            color: #666;
+            line-height: 1.8;
+            margin-bottom: 25px;
+            font-size: 16px;
+        }
+        
+        .features {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 25px 0;
+        }
+        
+        .features h4 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        
+        .features ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .features li {
+            padding: 10px 0;
+            color: #555;
+            display: flex;
+            align-items: center;
+        }
+        
+        .features li:before {
+            content: "✅";
+            margin-right: 10px;
+            color: #28a745;
+            font-size: 18px;
+        }
+        
+        .testimonials {
+            background: #e3f2fd;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+        
+        .testimonial {
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border-left: 4px solid #ff6b6b;
+        }
+        
+        .testimonial .author {
+            font-weight: bold;
+            color: #333;
+            margin-top: 10px;
+            text-align: right;
+        }
+        
+        .guarantee {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 30px 0;
+            text-align: center;
+        }
+        
+        .guarantee h4 {
+            font-size: 22px;
+            margin-bottom: 15px;
+        }
+        
+        .buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            color: white;
+            font-size: 20px;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(255, 107, 107, 0.4);
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+        
+        .counter {
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .counter .number {
+            color: #ff6b6b;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 600px) {
+            .content {
+                padding: 25px;
+            }
+            
+            .buttons {
+                flex-direction: column;
+            }
+            
+            .header {
+                padding: 30px 20px;
+            }
+            
+            .current-price {
+                font-size: 36px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔥 AI代码助手 - 限时优惠</h1>
+            <p>专业AI编程助手 - 立即提升10倍开发效率</p>
+            <div class="badge">⏰ 仅限今天 - 8折优惠</div>
+            
+            <div class="countdown" id="countdown">
+                优惠倒计时: <span id="timer">23:59:59</span>
+            </div>
+        </div>
+        
+        <div class="content">
+            <div class="product">
+                <h3>🤖 AI代码助手专业版</h3>
+                
+                <div class="price-container">
+                    <div class="original-price">$24.99/月</div>
+                    <div class="current-price">$19.99/月</div>
+                    <div class="discount">节省20%</div>
+                </div>
+                
+                <p class="description">
+                    专业级AI编程助手，支持无限代码生成、智能调试、代码优化、API集成等功能。
+                    适合开发者、初创公司和技术团队，平均每周节省15小时开发时间。
+                </p>
+                
+                <div class="features">
+                    <h4>🎯 核心功能</h4>
+                    <ul>
+                        <li>无限代码生成与智能补全</li>
+                        <li>多语言支持 (Python, JavaScript, Java, Go等)</li>
+                        <li>智能调试与错误修复</li>
+                        <li>代码优化与重构建议</li>
+                        <li>API集成与文档生成</li>
+                        <li>团队协作与版本控制</li>
+                        <li>7×24小时技术支持</li>
+                    </ul>
+                </div>
+                
+                <div class="testimonials">
+                    <h4>⭐ 用户评价</h4>
+                    <div class="testimonial">
+                        "这个AI助手彻底改变了我的工作方式！以前需要2天完成的项目，现在只需要4小时。"
+                        <div class="author">- 张先生，资深全栈开发者</div>
+                    </div>
+                    <div class="testimonial">
+                        "作为初创公司创始人，这个工具帮助我们快速原型开发，节省了数万美元的开发成本。"
+                        <div class="author">- 李女士，TechStart创始人</div>
+                    </div>
+                </div>
+                
+                <div class="guarantee">
+                    <h4>💯 100%满意保证</h4>
+                    <p>30天无条件退款保证 · 7天免费试用 · 24/7技术支持</p>
+                </div>
+                
+                <div class="buttons">
+                    <a href="https://buy.stripe.com/cNi28r7Bw9Vg95j8EkgQE0f" target="_blank" class="btn btn-primary" onclick="trackPurchase('ai_code_assistant', 19.99)">
+                        🚀 信用卡支付 - $19.99/月
+                    </a>
+                    <button class="btn btn-primary" style="background: linear-gradient(135deg, #4cc9f0 0%, #4361ee 100%);" onclick="window.location.href='/home/node/.openclaw/workspace/crypto_payment_page.html'">
+                        💰 加密货币支付
+                    </button>
+                </div>
+                
+                <div class="counter">
+                    <p>🔥 <span class="number">127</span> 位开发者正在使用 · 今日已有 <span class="number">23</span> 人购买</p>
+                </div>
+            </div>
+            
+            <div class="buttons">
+                <a href="https://dashboard.stripe.com" target="_blank" class="btn btn-secondary">
+                    📊 查看收入仪表板
+                </a>
+                <a href="mailto:support@example.com" class="btn btn-secondary">
+                    📧 联系支持
+                </a>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>© 2026 AI代码助手 | 专业AI编程解决方案</p>
+            <p>支付安全: Stripe PCI DSS Level 1认证 · 30天退款保证</p>
+        </div>
+    </div>
+    
+    <script>
+        // 倒计时功能
+        function updateCountdown() {
+            const now = new Date();
+            const endOfDay = new Date();
+            endOfDay.setHours(23, 59, 59, 999);
+            
+            const timeDiff = endOfDay - now;
+            const hours = Math.floor(timeDiff / (1000 * 60 * 60));
+            const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+            
+            document.getElementById('timer').textContent = 
+                `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            if (timeDiff <= 0) {
+                document.getElementById('countdown').innerHTML = "⏰ 优惠已结束";
+                clearInterval(countdownInterval);
+            }
+        }
+        
+        let countdownInterval = setInterval(updateCountdown, 1000);
+        updateCountdown();
+        
+        // 购买跟踪
+        function trackPurchase(product, price) {
+            console.log(`Purchase tracked: ${product} - $${price}`);
+            // 这里可以添加Google Analytics或自定义跟踪
+            alert('🎉 感谢购买！您将立即获得产品访问权限。');
+        }
+        
+        // 随机更新购买人数
+        function updatePurchaseCounter() {
+            const counter = document.querySelector('.counter .number:last-child');
+            let current = parseInt(counter.textContent);
+            if (Math.random() > 0.7) { // 30%几率增加
+                current += Math.floor(Math.random() * 3) + 1;
+                counter.textContent = current;
+                
+                // 显示通知
+                const notification = document.createElement('div');
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: #28a745;
+                    color: white;
+                    padding: 10px 20px;
+                    border-radius: 10px;
+                    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+                    z-index: 1000;
+                    animation: slideIn 0.5s ease;
+                `;
+                notification.innerHTML = `🎉 刚刚有${Math.floor(Math.random() * 3) + 1}人购买了AI代码助手！`;
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.style.animation = 'slideOut 0.5s ease';
+                    setTimeout(() => notification.remove(), 500);
+                }, 3000);
+            }
+        }
+        
+        setInterval(updatePurchaseCounter, 30000); // 每30秒更新一次
+        
+        // 添加CSS动画
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

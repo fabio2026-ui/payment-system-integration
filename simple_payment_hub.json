@@ -1,0 +1,31 @@
+{
+  "status": "active",
+  "mode": "production",
+  "stripe_mode": "live",
+  "projects_registered": [
+    {
+      "id": "ai_outsourcing",
+      "name": "AI外包公司",
+      "description": "全自动AI外包服务平台"
+    },
+    {
+      "id": "content_factory",
+      "name": "内容工厂",
+      "description": "AI驱动内容生成平台"
+    },
+    {
+      "id": "saas_builder",
+      "name": "SaaS构建器",
+      "description": "一键生成SaaS产品"
+    }
+  ],
+  "created_at": "2026-03-31T11:00:24.298758",
+  "crypto_payment": {
+    "enabled": true,
+    "addresses": {
+      "bitcoin": "bc1qnay69verr63h74tc8h3tvpg7gvjpktj336gmsf",
+      "ethereum": "0xd43b2D60B0b03cEcce6f71dDF765648dA511dAa98"
+    },
+    "added_at": "2026-04-03T16:32:36.255466"
+  }
+}

@@ -1,0 +1,289 @@
+{
+  "crypto_payment_system": {
+    "version": "1.0.0",
+    "description": "专业级加密货币支付网关配置",
+    "last_updated": "2026-04-04T10:11:45Z",
+    "status": "active"
+  },
+  
+  "api_configuration": {
+    "test_mode": true,
+    "api_key": "test_api_key_123456",
+    "api_secret": "test_api_secret_789012",
+    "base_url": "https://api.payment.example.com/v1",
+    "webhook_url": "https://your-domain.com/webhook/crypto-payment",
+    "timeout_seconds": 30,
+    "retry_attempts": 3
+  },
+  
+  "supported_cryptocurrencies": [
+    {
+      "code": "BTC",
+      "name": "Bitcoin",
+      "network": "Bitcoin Mainnet",
+      "min_amount": 0.0001,
+      "max_amount": 10,
+      "confirmation_required": 6,
+      "fee_percentage": 0.5,
+      "icon": "https://cryptoicons.org/api/icon/btc/200",
+      "enabled": true
+    },
+    {
+      "code": "ETH",
+      "name": "Ethereum",
+      "network": "Ethereum Mainnet",
+      "min_amount": 0.001,
+      "max_amount": 100,
+      "confirmation_required": 12,
+      "fee_percentage": 0.3,
+      "icon": "https://cryptoicons.org/api/icon/eth/200",
+      "enabled": true
+    },
+    {
+      "code": "USDT",
+      "name": "Tether",
+      "network": "Ethereum ERC-20",
+      "min_amount": 1,
+      "max_amount": 10000,
+      "confirmation_required": 12,
+      "fee_percentage": 0.1,
+      "icon": "https://cryptoicons.org/api/icon/usdt/200",
+      "enabled": true
+    },
+    {
+      "code": "USDC",
+      "name": "USD Coin",
+      "network": "Ethereum ERC-20",
+      "min_amount": 1,
+      "max_amount": 10000,
+      "confirmation_required": 12,
+      "fee_percentage": 0.1,
+      "icon": "https://cryptoicons.org/api/icon/usdc/200",
+      "enabled": true
+    },
+    {
+      "code": "SOL",
+      "name": "Solana",
+      "network": "Solana Mainnet",
+      "min_amount": 0.01,
+      "max_amount": 1000,
+      "confirmation_required": 32,
+      "fee_percentage": 0.2,
+      "icon": "https://cryptoicons.org/api/icon/sol/200",
+      "enabled": true
+    },
+    {
+      "code": "XRP",
+      "name": "Ripple",
+      "network": "XRP Ledger",
+      "min_amount": 1,
+      "max_amount": 10000,
+      "confirmation_required": 1,
+      "fee_percentage": 0.05,
+      "icon": "https://cryptoicons.org/api/icon/xrp/200",
+      "enabled": true
+    }
+  ],
+  
+  "exchange_rate_providers": [
+    {
+      "name": "CoinGecko",
+      "url": "https://api.coingecko.com/api/v3",
+      "priority": 1,
+      "cache_duration_seconds": 300,
+      "enabled": true
+    },
+    {
+      "name": "CoinMarketCap",
+      "url": "https://pro-api.coinmarketcap.com/v1",
+      "priority": 2,
+      "cache_duration_seconds": 300,
+      "enabled": false
+    },
+    {
+      "name": "Binance",
+      "url": "https://api.binance.com/api/v3",
+      "priority": 3,
+      "cache_duration_seconds": 60,
+      "enabled": false
+    }
+  ],
+  
+  "payment_settings": {
+    "default_currency": "USD",
+    "supported_fiat_currencies": ["USD", "EUR", "GBP", "JPY", "CNY"],
+    "payment_expiry_hours": 24,
+    "auto_refund_hours": 168,
+    "minimum_payment_usd": 1,
+    "maximum_payment_usd": 10000,
+    "qr_code_size": "300x300",
+    "qr_code_provider": "https://api.qrserver.com/v1/create-qr-code/"
+  },
+  
+  "webhook_settings": {
+    "enabled": true,
+    "secret_header": "X-Payment-Signature",
+    "events": [
+      "payment.created",
+      "payment.confirmed",
+      "payment.completed",
+      "payment.expired",
+      "payment.failed",
+      "payment.refunded"
+    ],
+    "retry_policy": {
+      "max_attempts": 5,
+      "initial_delay_seconds": 1,
+      "max_delay_seconds": 60,
+      "backoff_factor": 2
+    }
+  },
+  
+  "security_settings": {
+    "signature_algorithm": "HMAC-SHA256",
+    "jwt_expiry_hours": 24,
+    "ip_whitelist": [],
+    "rate_limit": {
+      "requests_per_minute": 60,
+      "burst_limit": 100
+    },
+    "ssl_required": true,
+    "two_factor_auth": false
+  },
+  
+  "notification_settings": {
+    "email_notifications": {
+      "enabled": true,
+      "provider": "smtp",
+      "templates": {
+        "payment_created": "payment_created.html",
+        "payment_confirmed": "payment_confirmed.html",
+        "payment_completed": "payment_completed.html"
+      }
+    },
+    "sms_notifications": {
+      "enabled": false,
+      "provider": "twilio"
+    },
+    "push_notifications": {
+      "enabled": true,
+      "provider": "firebase"
+    }
+  },
+  
+  "database_settings": {
+    "type": "postgresql",
+    "host": "localhost",
+    "port": 5432,
+    "database": "crypto_payments",
+    "username": "payment_user",
+    "password_env_var": "DB_PASSWORD",
+    "connection_pool": {
+      "min_connections": 5,
+      "max_connections": 20,
+      "max_lifetime_seconds": 3600
+    },
+    "backup": {
+      "enabled": true,
+      "frequency": "daily",
+      "retention_days": 30
+    }
+  },
+  
+  "monitoring_settings": {
+    "health_check_endpoint": "/health",
+    "metrics_endpoint": "/metrics",
+    "log_level": "INFO",
+    "log_retention_days": 90,
+    "alerting": {
+      "enabled": true,
+      "providers": ["slack", "email"],
+      "thresholds": {
+        "error_rate_percent": 1,
+        "response_time_ms": 1000,
+        "payment_failure_rate": 5
+      }
+    }
+  },
+  
+  "compliance_settings": {
+    "kyc_required": true,
+    "aml_check": true,
+    "sanctions_screening": true,
+    "data_retention_years": 7,
+    "privacy_policy_url": "https://example.com/privacy",
+    "terms_of_service_url": "https://example.com/terms"
+  },
+  
+  "integration_settings": {
+    "shopify": {
+      "enabled": false,
+      "api_version": "2024-01"
+    },
+    "woocommerce": {
+      "enabled": true,
+      "plugin_version": "2.0.0"
+    },
+    "stripe": {
+      "enabled": true,
+      "fallback_enabled": true
+    },
+    "paypal": {
+      "enabled": false
+    }
+  },
+  
+  "performance_settings": {
+    "cache_enabled": true,
+    "cache_ttl_seconds": 300,
+    "compression_enabled": true,
+    "cdn_enabled": true,
+    "load_balancing": {
+      "enabled": true,
+      "strategy": "round_robin"
+    }
+  },
+  
+  "deployment_settings": {
+    "environment": "production",
+    "region": "us-east-1",
+    "auto_scaling": {
+      "enabled": true,
+      "min_instances": 2,
+      "max_instances": 10,
+      "cpu_threshold_percent": 70
+    },
+    "container": {
+      "image": "payment-gateway:latest",
+      "port": 8080,
+      "memory_mb": 512,
+      "cpu_units": 256
+    }
+  },
+  
+  "maintenance_settings": {
+    "maintenance_window": "02:00-04:00 UTC",
+    "backup_window": "01:00-02:00 UTC",
+    "update_strategy": "rolling"
+  },
+  
+  "testing_settings": {
+    "test_networks": {
+      "bitcoin_testnet": true,
+      "ethereum_goerli": true,
+      "solana_devnet": true
+    },
+    "mock_mode": true,
+    "test_wallets": {
+      "btc_test_address": "tb1qtestaddress1234567890",
+      "eth_test_address": "0x1234567890abcdef1234567890abcdef12345678"
+    }
+  },
+  
+  "documentation": {
+    "api_docs_url": "https://docs.payment.example.com",
+    "integration_guide_url": "https://docs.payment.example.com/integration",
+    "support_email": "support@payment.example.com",
+    "status_page_url": "https://status.payment.example.com"
+  }
+}

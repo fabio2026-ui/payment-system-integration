@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SupportBot AI - 下载和部署指南</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .step { background: #f5f5f5; padding: 20px; margin: 20px 0; border-radius: 10px; }
+        .code { background: #333; color: white; padding: 10px; border-radius: 5px; font-family: monospace; }
+        .important { background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; }
+    </style>
+</head>
+<body>
+    <h1>🚀 SupportBot AI 部署指南</h1>
+    
+    <div class="step">
+        <h2>📁 步骤1：获取网站文件</h2>
+        <p>复制以下代码到文本编辑器（如记事本），保存为 <strong>supportbot_ai.html</strong>：</p>
+        <div class="code" id="htmlCode">
+            <!-- 这里会显示HTML代码 -->
+        </div>
+        <button onclick="copyCode()">📋 复制全部代码</button>
+    </div>
+    
+    <div class="step">
+        <h2>🌐 步骤2：部署到Netlify</h2>
+        <ol>
+            <li>访问：<a href="https://app.netlify.com/drop" target="_blank">https://app.netlify.com/drop</a></li>
+            <li>将保存的 <strong>supportbot_ai.html</strong> 文件拖拽到页面中央</li>
+            <li>等待5-10秒，获得你的网站链接</li>
+            <li>复制链接，开始获取客户！</li>
+        </ol>
+    </div>
+    
+    <div class="step">
+        <h2>💰 步骤3：验证Stripe付款</h2>
+        <p>网站包含三个Stripe付款链接：</p>
+        <ul>
+            <li><strong>$19/月 - AI Code Assistant</strong>: https://buy.stripe.com/cNi28r7Bw9Vg95j8EkgQE0f</li>
+            <li><strong>$29/月 - Ultra Studio</strong>: https://buy.stripe.com/dRm00jaNI2sO4P3dYEgQE0h</li>
+            <li><strong>$79/月 - Ultra Master</strong>: https://buy.stripe.com/dRmeVd7Bw4AW1CR1bSgQE0i</li>
+            <li><strong>$199/月 - Smart Factory Lite</strong>: https://buy.stripe.com/8x23cv7Bw5F0bdraMsgQE0g</li>
+        </ul>
+        <p>点击测试，确保链接正常工作。</p>
+    </div>
+    
+    <div class="important">
+        <h2>🎯 立即开始赚钱！</h2>
+        <p><strong>客户获取策略</strong>：</p>
+        <ol>
+            <li>LinkedIn搜索："电商店主"、"SaaS创始人"</li>
+            <li>发送消息："你好！我是SupportBot AI创始人。我们的AI客服可以帮你节省80%客服时间，每月$79.99起。免费试用14天：[你的网站链接]"</li>
+            <li>目标：今日联系20人，获取1-3个付费客户</li>
+        </ol>
+        <p><strong>收入预测</strong>：今日$79.99-$449.97</p>
+    </div>
+    
+    <script>
+        // 加载HTML文件内容
+        fetch('supportbot_ai.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('htmlCode').textContent = data;
+            })
+            .catch(error => {
+                document.getElementById('htmlCode').textContent = '错误：无法加载文件内容';
+            });
+        
+        function copyCode() {
+            const codeElement = document.getElementById('htmlCode');
+            const textArea = document.createElement('textarea');
+            textArea.value = codeElement.textContent;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            alert('✅ 代码已复制到剪贴板！保存为 supportbot_ai.html');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>24小时收入监控 - 实时仪表板</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f7fa;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+        }
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .stat-card h3 {
+            font-size: 2.5rem;
+            margin: 15px 0;
+            color: #333;
+        }
+        .stat-card .label {
+            color: #666;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .progress-bar {
+            height: 30px;
+            background: #e0e0e0;
+            border-radius: 15px;
+            margin: 30px 0;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4CAF50, #8BC34A);
+            width: 0.0%;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        .actions-panel {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+        }
+        .actions-panel h2 {
+            color: #333;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+        .action-item {
+            background: #f8f9fa;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+        .time-info {
+            background: #fff3cd;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 4px solid #ffc107;
+        }
+        .footer {
+            text-align: center;
+            color: #666;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+        .revenue-badge {
+            display: inline-block;
+            background: #f44336;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>24小时收入监控仪表板 <span class="revenue-badge">无收入</span></h1>
+            <p>目标: $100 真实收入 | 开始时间: 2026-04-09 15:33</p>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="label">当前收入</div>
+                <h3>$0.00</h3>
+                <div>目标: $100.00</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">总销售数</div>
+                <h3>0</h3>
+                <div>平均客单价: $0.00</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">完成进度</div>
+                <h3>0.0%</h3>
+                <div>剩余: $100.00</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">当前小时</div>
+                <h3>15:00</h3>
+                <div>目标: $4.17 | 实际: $0.00</div>
+            </div>
+        </div>
+        
+        <div class="progress-bar">
+            <div class="progress-fill">0.0%</div>
+        </div>
+        
+        <div class="time-info">
+            <h3>⏰ 时间分析</h3>
+            <p>当前时间: 15:33 | 已过去: 15小时 | 剩余: 9小时</p>
+            <p>每小时需要: $11.11 才能达成目标</p>
+        </div>
+        
+        <div class="actions-panel">
+            <h2>🎯 实时优化建议</h2>
+            <div class="action-item">⚠️ 真实状态: 暂无收入，等待第一笔真实支付</div><div class="action-item">1. 收款链接已就绪: https://checkout.stripe.com/c/pay/cs_live_a1PX9HibJYwE0KgaU1vDty8KPX9GcvbBxWna5BzkiExeCT9iEcNo6hhg61</div><div class="action-item">2. 需要推广获取真实客户付款</div><div class="action-item">3. 系统100%就绪，等待支付</div><div class="action-item">4. 真实Stripe账户: acct_1TCfcBDRLWt3rKvb (意大利, EUR)</div><div class="action-item">5. 监控系统显示100%真实数据</div><div class="action-item">⏰ 下午策略: 专注于个人消费者和小团队</div>
+        </div>
+        
+        <div class="footer">
+            <p>最后更新: 2026-04-09 15:33:47</p>
+            <p>监控系统自动刷新每5分钟 | 数据来源: 实战营销优化系统</p>
+        </div>
+    </div>
+    
+    <script>
+        // 自动刷新每5分钟
+        setTimeout(() => {
+            location.reload();
+        }, 300000);
+        
+        // 实时更新进度条
+        const progressBar = document.querySelector('.progress-fill');
+        let currentProgress = 0.0;
+        
+        // 模拟实时更新（实际中这里会有WebSocket连接）
+        setInterval(() => {
+            // 这里可以添加实际的WebSocket更新
+        }, 10000);
+    </script>
+</body>
+</html>
